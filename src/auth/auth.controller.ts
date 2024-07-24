@@ -40,6 +40,6 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Delete('delete')
   deleteUser(@Req() req: Request) {
-    return this.authService.deleteUser(req['user'].username);
+    return this.authService.deleteUser(req['user'].id);
   }
 }

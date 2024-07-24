@@ -39,8 +39,8 @@ export class AuthService {
   }
 
   async deleteUser(
-    username: string,
+    id: string,
   ) {
-    return await this.usersService.deleteOne(username);
+    return await this.usersService.deleteOne(id);
   }
 }
