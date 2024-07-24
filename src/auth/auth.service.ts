@@ -25,7 +25,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const {password, ...result} = user;
+    const { password, ...result } = user;
 
     return {
       access_token: await this.jwtService.signAsync(result),
@@ -36,5 +36,11 @@ export class AuthService {
     createUserDto: CreateUserDto,
   ) {
     return await this.usersService.create(createUserDto);
+  }
+
+  async deleteUser(
+    username: string,
+  ) {
+    return await this.usersService.deleteOne(username);
   }
 }

@@ -16,6 +16,11 @@ export class UsersService {
     return this.usersRepository.findOneBy({ username: username });
   }
 
+  async deleteOne(username: string) {
+    const result = await this.usersRepository.delete({ username: username });
+    return result;
+  }
+
   async create(createUserDto: CreateUserDto) {
     const username = createUserDto.username;
     const isUserExist = await this.usersRepository.exists({

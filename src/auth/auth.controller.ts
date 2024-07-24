@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Request,
   UseGuards
 } from '@nestjs/common';
@@ -36,8 +38,8 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('world')
-  getWorld(@Request() req) {
-    return 'world';
+  @Delete('delete')
+  deleteUser(@Req() req: Request) {
+    return this.authService.deleteUser(req['user'].username);
   }
 }
