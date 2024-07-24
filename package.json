@@ -34,6 +34,7 @@
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
+    "@casl/ability": "^6.7.1",
     "@nestjs/cli": "^10.3.1",
     "@nestjs/schematics": "^10.1.0",
     "@nestjs/testing": "^10.3.2",

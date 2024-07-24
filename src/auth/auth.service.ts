@@ -43,4 +43,8 @@ export class AuthService {
   ) {
     return await this.usersService.deleteOne(id);
   }
+
+  async deleteAllUser() {
+    return await this.usersService.deleteAll();
+  }
 }

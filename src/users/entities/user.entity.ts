@@ -8,9 +8,12 @@ export class User {
   @Column({ length: 100 })
   name: string;
 
-  @Column({ length: 100 })
+  @Column({ nullable: false, unique: true })
   username: string;
 
-  @Column({ default: true })
+  @Column({ nullable: false })
   password: string;
+
+  @Column({ default: false })
+  role: string;
 }

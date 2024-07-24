@@ -21,6 +21,11 @@ export class UsersService {
     return result;
   }
 
+  async deleteAll() {
+    const result = await this.usersRepository.delete({});
+    return result;
+  }
+
   async create(createUserDto: CreateUserDto) {
     const username = createUserDto.username;
     const isUserExist = await this.usersRepository.exists({
