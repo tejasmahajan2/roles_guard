@@ -3,9 +3,9 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   Post,
   Req,
-  Request,
   UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
@@ -14,6 +14,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { SignInDto } from 'src/users/dto/sign-in.dto';
 import { Role } from 'src/roles/role.enum';
 import { IExpressRequest } from 'src/decorators/IExpressRequest';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -45,7 +46,14 @@ export class AuthController {
   }
 
   // Developement Purpose
-  @Delete('delete')
+  @Patch('change-password')
+  @UseGuards(AuthGuard)
+  updatePassword(@Req() req: IExpressRequest, updateUserDto: UpdateUserDto) {
+    console.log(updateUserDto);
+    return this.authService.updateOne(req['user'].id, updateUserDto);
+  }
+
+  @Delete()
   @UseGuards(AuthGuard)
   deleteUser(@Req() req: IExpressRequest) {
     return this.authService.deleteOne(req['user'].id);

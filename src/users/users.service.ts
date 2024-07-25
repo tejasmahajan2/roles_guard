@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,27 +13,28 @@ export class UsersService {
   ) { }
 
   async findOne(username: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({ username: username });
+    return await this.usersRepository.findOneBy({ username });
+  }
+
+  async isExist(username: string): Promise<Boolean> {
+    return await this.usersRepository.exists({
+      where: { username }
+    });
+  }
+
+  async updateOne(username: string, updateUserDto: UpdateUserDto): Promise<User | null> {
+    await this.usersRepository.update(username, updateUserDto);
+    return this.findOne(username);
   }
 
   async create(createUserDto: CreateUserDto) {
-    const username = createUserDto.username;
-    const isUserExist = await this.usersRepository.exists({
-      where: { username }
-    });
-    if (isUserExist) {
-      throw new BadRequestException('User already exist.');
-    };
-
-    const saltRounds = 10;
-    createUserDto.password = await bcrypt.hash(createUserDto.password, saltRounds);
     const user = await this.usersRepository.save(createUserDto);
     const { password, ...result } = user;
     return result;
   }
 
   async filter(role: string): Promise<User[]> {
-    return this.usersRepository.createQueryBuilder('i')
+    return await this.usersRepository.createQueryBuilder('i')
       .select(["i.name", "i.id"])
       .where("i.role = role", { role: role })
       .getMany();

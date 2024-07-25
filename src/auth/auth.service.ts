@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { SignInDto } from 'src/users/dto/sign-in.dto';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +12,11 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService
   ) { }
+
+  async hashPassword(password: string) {
+    const saltRounds = 10;
+    return await bcrypt.hash(password, saltRounds);
+  }
 
   async signIn(
     signInDto: SignInDto,
@@ -35,11 +41,21 @@ export class AuthService {
   async signUp(
     createUserDto: CreateUserDto,
   ) {
+    const username = createUserDto.username;
+    if (await this.usersService.isExist(username)) {
+      throw new BadRequestException('User already exist.');
+    };
+
+    createUserDto.password = await this.hashPassword(createUserDto.password);
     return await this.usersService.create(createUserDto);
   }
 
+  async updateOne(id: string, updateUserDto: UpdateUserDto,) {
+    return await this.usersService.updateOne(id, updateUserDto);
+  }
+
   // Development
-  async deleteOne(id : string) {
+  async deleteOne(id: string) {
     return await this.usersService.deleteOne(id);
   }
 
