@@ -21,7 +21,7 @@ export class AuthService {
   async signIn(
     signInDto: SignInDto,
   ): Promise<{ access_token: string }> {
-    const user = await this.usersService.findOne(signInDto.username);
+    const user = await this.usersService.findOneByUsername(signInDto.username);
 
     if (!user) {
       throw new NotFoundException();
@@ -50,8 +50,9 @@ export class AuthService {
     return await this.usersService.create(createUserDto);
   }
 
-  async updateOne(id: string, updateUserDto: UpdateUserDto,) {
-    return await this.usersService.updateOne(id, updateUserDto);
+  async updateOne(username: string, updateUserDto: UpdateUserDto,) {
+    updateUserDto.password = await this.hashPassword(updateUserDto.password);
+    return await this.usersService.updateOne(username, updateUserDto);
   }
 
   // Development

@@ -12,7 +12,11 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) { }
 
-  async findOne(username: string): Promise<User | null> {
+  async findOne(id: any): Promise<User | null> {
+    return await this.usersRepository.findOne(id);
+  }
+
+  async findOneByUsername(username: string): Promise<User | null> {
     return await this.usersRepository.findOneBy({ username });
   }
 
@@ -22,9 +26,9 @@ export class UsersService {
     });
   }
 
-  async updateOne(username: string, updateUserDto: UpdateUserDto): Promise<User | null> {
-    await this.usersRepository.update(username, updateUserDto);
-    return this.findOne(username);
+  async updateOne(username: string, updateUserDto: UpdateUserDto): Promise<String> {
+    const result = await this.usersRepository.update({ username }, { ...updateUserDto });
+    return 'Password updated successfully.';
   }
 
   async create(createUserDto: CreateUserDto) {

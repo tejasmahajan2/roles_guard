@@ -46,11 +46,10 @@ export class AuthController {
   }
 
   // Developement Purpose
-  @Patch('change-password')
+  @Patch('update-password')
   @UseGuards(AuthGuard)
-  updatePassword(@Req() req: IExpressRequest, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
-    return this.authService.updateOne(req['user'].id, updateUserDto);
+  updatePassword(@Req() req: IExpressRequest, @Body() updateUserDto: UpdateUserDto) {
+    return this.authService.updateOne(req.user.username, updateUserDto);
   }
 
   @Delete()
