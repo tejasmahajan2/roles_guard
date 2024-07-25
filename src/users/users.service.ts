@@ -16,24 +16,6 @@ export class UsersService {
     return this.usersRepository.findOneBy({ username: username });
   }
 
-
-  async filter(role: string): Promise<User[]> {
-    return this.usersRepository.createQueryBuilder('i')
-      .select(["i.name", "i.id"])
-      .where("i.role = role", { role: role })
-      .getMany();
-  }
-
-  async deleteOne(id: string) {
-    const result = await this.usersRepository.delete(id);
-    return result;
-  }
-
-  async deleteAll() {
-    const result = await this.usersRepository.delete({});
-    return result;
-  }
-
   async create(createUserDto: CreateUserDto) {
     const username = createUserDto.username;
     const isUserExist = await this.usersRepository.exists({
@@ -48,5 +30,21 @@ export class UsersService {
     const user = await this.usersRepository.save(createUserDto);
     const { password, ...result } = user;
     return result;
+  }
+
+  async filter(role: string): Promise<User[]> {
+    return this.usersRepository.createQueryBuilder('i')
+      .select(["i.name", "i.id"])
+      .where("i.role = role", { role: role })
+      .getMany();
+  }
+
+  // Development
+  async deleteOne(id: string) {
+    return await this.usersRepository.delete(id);
+  }
+
+  async deleteAll() {
+    return await this.usersRepository.delete({});
   }
 }

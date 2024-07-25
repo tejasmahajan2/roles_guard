@@ -38,13 +38,12 @@ export class AuthService {
     return await this.usersService.create(createUserDto);
   }
 
-  async deleteUser(
-    id: string,
-  ) {
+  // Development
+  async deleteOne(id : string) {
     return await this.usersService.deleteOne(id);
   }
 
-  async deleteAllUser() {
+  async deleteAll() {
     return await this.usersService.deleteAll();
   }
 }

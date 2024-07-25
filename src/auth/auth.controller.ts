@@ -13,10 +13,13 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { SignInDto } from 'src/users/dto/sign-in.dto';
 import { Role } from 'src/roles/role.enum';
+import { IExpressRequest } from 'src/decorators/IExpressRequest';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService
+  ) { }
 
   @Post('login')
   signIn(@Body() signInDto: SignInDto) {
@@ -41,22 +44,16 @@ export class AuthController {
     return this.authService.signUp(createUserDto);
   }
 
-  @UseGuards(AuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
-  }
-
-  @UseGuards(AuthGuard)
+  // Developement Purpose
   @Delete('delete')
-  deleteUser(@Req() req: Request) {
-    return this.authService.deleteUser(req['user'].id);
+  @UseGuards(AuthGuard)
+  deleteUser(@Req() req: IExpressRequest) {
+    return this.authService.deleteOne(req['user'].id);
   }
 
-  // Delete all users
-  @UseGuards(AuthGuard)
   @Delete('delete-all')
-  deleteAllUser(@Req() req: Request) {
-    return this.authService.deleteAllUser();
+  @UseGuards(AuthGuard)
+  deleteAllUser() {
+    return this.authService.deleteAll();
   }
 }
